@@ -1,0 +1,8 @@
+data/*
+__pycache__
+slurm-*
+logs
+src/checkpoint
+.vscode
+src/fig_result
+*.json
