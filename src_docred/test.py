@@ -168,7 +168,6 @@ def test(model, dataloader, id2rel, input_theta=-1, output=False,
 
 if __name__ == '__main__':
     opt, data_opt = get_opt()
-    data_opt.data_word_vec = data_opt.word2vec
     if opt.use_model == 'bert':
         train_set = BERTDGLREDataset(
             opt.train_set, data_opt.ner2id, data_opt.rel2id, dataset='train',

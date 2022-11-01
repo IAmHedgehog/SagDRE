@@ -7,3 +7,4 @@ src/checkpoint
 src/fig_result
 *.json
 *.data
+docred/*

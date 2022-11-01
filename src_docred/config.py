@@ -32,7 +32,6 @@ def get_opt():
 
     # word embedding
     parser.add_argument('--word_emb_size', type=int, default=10)
-    parser.add_argument('--data_word_vec', type=str)
 
     # entity type embedding
     parser.add_argument('--use_entity_type', action='store_true')

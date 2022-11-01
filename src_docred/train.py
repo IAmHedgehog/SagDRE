@@ -235,5 +235,4 @@ def train(opt, data_opt):
 if __name__ == '__main__':
     set_random(432)
     opt, data_opt = get_opt()
-    data_opt.data_word_vec = data_opt.word2vec
     train(opt, data_opt)
