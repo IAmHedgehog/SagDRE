@@ -17,7 +17,7 @@ class BERTDGLREDataset(IterableDataset):
 
     def __init__(self, src_file, ner2id, rel2id,
                  dataset='train', instance_in_train=None,
-                 model_name='GAIN_BERT_base'):
+                 model_name='SAGDRE_BERT_base'):
 
         super(BERTDGLREDataset, self).__init__()
 

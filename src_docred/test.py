@@ -4,8 +4,8 @@ import numpy as np
 import torch
 from config import get_opt
 from data import DGLREDataloader, BERTDGLREDataset, GloveDGLREDataset
-from GAIN import GAIN_BERT
-from GAIN_glove import GAIN_GLOVE
+from SAGDRE import SAGDRE_BERT
+from SAGDRE_glove import SAGDRE_GLOVE
 from utils import logging
 
 
@@ -181,7 +181,7 @@ if __name__ == '__main__':
             opt.test_set, data_opt.ner2id, data_opt.rel2id, dataset='test',
             instance_in_train=train_set.instance_in_train,
             model_name=opt.model_name)
-        model = GAIN_BERT(opt)
+        model = SAGDRE_BERT(opt)
     else:
         train_set = GloveDGLREDataset(
             opt.train_set, data_opt.word2id, data_opt.ner2id, data_opt.rel2id,
@@ -192,7 +192,7 @@ if __name__ == '__main__':
         test_set = GloveDGLREDataset(
             opt.test_set, data_opt.word2id, data_opt.ner2id, data_opt.rel2id,
             dataset='test', instance_in_train=train_set.instance_in_train)
-        model = GAIN_GLOVE(opt, data_opt)
+        model = SAGDRE_GLOVE(opt, data_opt)
 
     # dev_loader = DGLREDataloader(
     #     dev_set, batch_size=opt.test_batch_size, dataset_type='test')

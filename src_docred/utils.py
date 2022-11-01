@@ -360,9 +360,8 @@ class ATLoss(nn.Module):
 
         # Sum two parts
         # loss = loss1 + loss2 + loss3 + loss4
-        loss = loss3 + 0.5 * loss4
-        # loss = loss3 + loss4
-        # loss = loss1 + 0.5 * loss2
+        # loss = loss3 + 0.5 * loss4
+        loss = loss3 + loss4
         loss = torch.sum(loss * r_mask) / torch.sum(r_mask)
         # loss = loss.mean()
         return loss
@@ -376,7 +375,7 @@ class Bert():
     def __init__(self, model_name):
         super().__init__()
         self.model_name = model_name
-        if model_name == 'GAIN_BERT_base':
+        if model_name == 'SAGDRE_BERT_base':
             self.tokenizer = BertTokenizer.from_pretrained('bert-base-cased')
         else:
             self.tokenizer = BertTokenizer.from_pretrained('bert-large-cased')

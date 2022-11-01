@@ -32,7 +32,7 @@ def parse_sent(tokens, g, pre_roots):
     idx = 0
     for token in tokens:
         is_root = token in roots
-        g.add_node(start+idx, text=token.text, vector=token.vector,
+        g.add_node(start + idx, text=token.text, vector=token.vector,
                    is_root=is_root, tag=token.tag_, pos=token.pos_,
                    dep=token.dep_)
         dic[token] = start + idx
@@ -84,60 +84,53 @@ def add_same_words_links(g, remove_stopwords=True):
 def add_entity_node(g, pos_idx, max_id):
     start = len(g.nodes())
     for idx in range(max_id):
-        g.add_node(start+idx, text='entity_%s' % idx, is_root=False)
-        if idx+1 not in pos_idx:
+        g.add_node(start + idx, text='entity_%s' % idx, is_root=False)
+        if idx + 1 not in pos_idx:
             continue
-        # to_add_edges = set()
-        for idx2, node in enumerate(pos_idx[idx+1]):
-            # edges = g.edges(node)
-            # to_add_edges.update([e for _, e in edges if e < start])
-            # for neighbor_node in to_add_edges:
-            #     g.add_edge(start+idx, neighbor_node)
-            #     g.add_edge(neighbor_node, start+idx)
-
-            # for node2 in pos_idx[idx+1][:idx2]:
-            #     g.add_edge(node2, node)
-            #     g.add_edge(node, node2)
-
-            g.add_edge(start+idx, node)
-            g.add_edge(node, start+idx)
+        for idx2, node in enumerate(pos_idx[idx + 1]):
+            g.add_edge(start + idx, node)
+            g.add_edge(node, start + idx)
     return g, start
 
 
 def get_entity_paths(g, max_id, start):
-    roots_path = [n for n, d in g.nodes().items() if d['is_root']]
-    pos_data = nx.get_node_attributes(g, 'pos')
-    # dep_data = nx.get_node_attributes(g, 'dep')
     ent_paths = {}
+    pos_data = nx.get_node_attributes(g, 'pos')
     for idx in range(max_id):
         for j in range(max_id):
             if idx != j:
                 try:
-                    # paths = [nx.shortest_path(g, start+idx, start+j)]
-                    paths = list(nx.all_simple_paths(g, start+idx, start+j, 12))
-                    if len(paths) == 0:
-                        paths = [nx.shortest_path(g, start+idx, start+j)]
-                    new_paths = []
-                    for path in paths:
-                        # add immediate neighbors for nodes on the path
-                        neighbors = set()
-                        # neighbors = list()
-                        for n in path:
-                            neighbors.add(n)
-                            for cur_neigh in g.neighbors(n):
-                                if cur_neigh in pos_data:
-                                    if pos_data[cur_neigh] in ['ADP']:
-                                        neighbors.add(cur_neigh)
-                                    # if dep_data[cur_neigh] in ['neg']:
-                                    #     neighbors.add(cur_neigh)
-                        path = sorted(neighbors)
-                        path = sorted(path)
-                        new_paths.append(path)
+                    # paths = list(nx.all_simple_paths(g, start + idx, start + j, 8))
+                    # if len(paths) == 0:
+                    paths = [nx.shortest_path(g, start + idx, start + j)]
                 except nx.NetworkXNoPath:
-                    new_paths = [[start+idx] + roots_path + [start+j]]
-                    # path = [start+idx] + roots_path + [start+j]
-                    # path = [start+idx, start+j]
-                ent_paths[(idx+1, j+1)] = new_paths[:3]
+                    paths = []
+                new_paths = []
+                # for path in paths:
+                #     path = sorted(path)
+                #     new_paths.append(path)
+
+                for path in paths[:3]:
+                    # add immediate neighbors for nodes on the path
+                    neighbors = set()
+                    # neighbors = list()
+                    for n in path:
+                        neighbors.add(n)
+                        for cur_neigh in g.neighbors(n):
+                            if cur_neigh in pos_data:
+                                if pos_data[cur_neigh] in ['ADP']:
+                                    neighbors.add(cur_neigh)
+                                # if dep_data[cur_neigh] in ['neg']:
+                                #     neighbors.add(cur_neigh)
+                    path = sorted(neighbors)
+                    # path = sorted(path)
+                    new_paths.append(path)
+                # except nx.NetworkXNoPath:
+                #     new_paths = [[start + idx] + roots_path + [start + j]]
+                #     # path = [start+idx] + roots_path + [start+j]
+                #     # path = [start+idx, start+j]
+
+                ent_paths[(idx + 1, j + 1)] = new_paths[:3]
     return ent_paths
 
 

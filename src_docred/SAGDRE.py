@@ -5,9 +5,9 @@ from transformers import BertModel
 from utils import GCNLayer, AttnLayer, filter_g
 
 
-class GAIN_BERT(nn.Module):
+class SAGDRE_BERT(nn.Module):
     def __init__(self, config):
-        super(GAIN_BERT, self).__init__()
+        super(SAGDRE_BERT, self).__init__()
         self.config = config
         self.activation = nn.ReLU()
         self.entity_type_emb = nn.Embedding(
@@ -17,7 +17,7 @@ class GAIN_BERT(nn.Module):
             config.max_entity_num + 1, config.entity_id_size,
             padding_idx=config.entity_id_pad)
 
-        if config.model_name == 'GAIN_BERT_base':
+        if config.model_name == 'SAGDRE_BERT_base':
             self.bert = BertModel.from_pretrained(
                 "bert-base-cased", return_dict=False)
         else:
@@ -25,6 +25,8 @@ class GAIN_BERT(nn.Module):
                 "bert-large-cased", return_dict=False)
 
         self.start_dim = config.bert_hid_size
+
+        # if config.use_entity_type:
         self.start_dim += config.entity_type_size + config.entity_id_size
 
         self.gcn_dim = config.gcn_dim

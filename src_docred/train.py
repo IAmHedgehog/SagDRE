@@ -7,8 +7,8 @@ from torch import optim
 from transformers import optimization
 from config import get_opt
 from data import DGLREDataloader, BERTDGLREDataset, GloveDGLREDataset
-from GAIN import GAIN_BERT
-from GAIN_glove import GAIN_GLOVE
+from SAGDRE import SAGDRE_BERT
+from SAGDRE_glove import SAGDRE_GLOVE
 from test import test
 from utils import Accuracy, get_cuda, logging, set_random, ATLoss
 
@@ -31,7 +31,7 @@ def train(opt, data_opt):
         dev_loader = DGLREDataloader(
             dev_set, batch_size=opt.test_batch_size, dataset_type='dev')
 
-        model = GAIN_BERT(opt)
+        model = SAGDRE_BERT(opt)
     else:
         print('Training with GLOVE==============')
         train_set = GloveDGLREDataset(
@@ -47,7 +47,7 @@ def train(opt, data_opt):
         dev_loader = DGLREDataloader(
             dev_set, batch_size=opt.test_batch_size, dataset_type='dev')
 
-        model = GAIN_GLOVE(opt, data_opt)
+        model = SAGDRE_GLOVE(opt, data_opt)
 
     start_epoch = 1
     pretrain_model = opt.pretrain_model
@@ -136,8 +136,8 @@ def train(opt, data_opt):
                 path2_table=d['path2_table'],
                 sub2words=d['sub2words'])
 
-            train_loader.feedback(
-                m_preds, m_label, r_mask, d['h_t_pairs'], relation_example_idx)
+            # train_loader.feedback(
+            #     m_preds, m_label, r_mask, d['h_t_pairs'], relation_example_idx)
 
             loss2 = Aloss(
                 m_preds.view(-1, 97), m_label.view(-1, 97), r_mask.view(-1))

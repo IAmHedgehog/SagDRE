@@ -6,3 +6,4 @@ src/checkpoint
 .vscode
 src/fig_result
 *.json
+*.data

@@ -1,0 +1,16 @@
+python ../src_bio/train_bio.py --data_dir ../dataset/cdr \
+--transformer_type bert \
+--model_name_or_path allenai/scibert_scivocab_uncased \
+--train_file train_filter.data \
+--dev_file dev_filter.data \
+--test_file test_filter.data \
+--train_batch_size 16 \
+--test_batch_size 4 \
+--num_labels 1 \
+--learning_rate 5e-5 \
+--max_grad_norm 1.0 \
+--warmup_ratio 0.06 \
+--num_train_epochs 30.0 \
+--seed 66 \
+--gcn_dim 8 \
+--num_class 2
