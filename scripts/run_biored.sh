@@ -1,0 +1,16 @@
+python ../src_bio/train_bio.py --data_dir ../dataset/biored \
+--transformer_type bert \
+--model_name_or_path microsoft/BiomedNLP-PubMedBERT-base-uncased-abstract-fulltext \
+--train_file train+dev.data \
+--dev_file dev.data \
+--test_file test.data \
+--train_batch_size 14 \
+--test_batch_size 4 \
+--num_labels 3 \
+--learning_rate 2e-5 \
+--max_grad_norm 1.0 \
+--warmup_ratio 0.03 \
+--num_train_epochs 30.0 \
+--seed 66 \
+--gcn_dim 64 \
+--num_class 9

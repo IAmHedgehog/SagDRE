@@ -11,6 +11,22 @@ biored_rel2id = {
     '1:Negative_Correlation:2': 4, '1:Cotreatment:2': 5, '1:Comparison:2': 6,
     '1:Conversion:2': 7, '1:Drug_Interaction:2': 8}
 
+biored_valid_pairs = {
+    ('ChemicalEntity', 'ChemicalEntity'),
+    ('ChemicalEntity', 'DiseaseOrPhenotypicFeature'),
+    ('ChemicalEntity', 'GeneOrGeneProduct'),
+    ('ChemicalEntity', 'SequenceVariant'),
+    ('DiseaseOrPhenotypicFeature', 'ChemicalEntity'),
+    ('DiseaseOrPhenotypicFeature', 'GeneOrGeneProduct'),
+    ('DiseaseOrPhenotypicFeature', 'SequenceVariant'),
+    ('GeneOrGeneProduct', 'ChemicalEntity'),
+    ('GeneOrGeneProduct', 'DiseaseOrPhenotypicFeature'),
+    ('GeneOrGeneProduct', 'GeneOrGeneProduct'),
+    ('SequenceVariant', 'ChemicalEntity'),
+    ('SequenceVariant', 'DiseaseOrPhenotypicFeature'),
+    ('SequenceVariant', 'GeneOrGeneProduct'),
+    ('SequenceVariant', 'SequenceVariant')}
+
 def chunks(l, n):
     res = []
     for i in range(0, len(l), n):
@@ -176,10 +192,10 @@ def read_chr(file_in, tokenizer, max_seq_length=1024):
 
 
 def read_biored(file_in, tokenizer, max_seq_length=1024):
-    return read_bio(file_in, tokenizer, biored_rel2id, max_seq_length)
+    return read_bio(file_in, tokenizer, biored_rel2id, max_seq_length, biored_valid_pairs)
 
 
-def read_bio(file_in, tokenizer, rel2id, max_seq_length=1024):
+def read_bio(file_in, tokenizer, rel2id, max_seq_length=1024, valid_ents_pair=None):
     pmids = set()
     features = []
     maxlen = 0
@@ -254,10 +270,12 @@ def read_bio(file_in, tokenizer, rel2id, max_seq_length=1024):
                         h_id, t_id = p[5], p[11]
                         h_start, t_start = p[8], p[14]
                         h_end, t_end = p[9], p[15]
+                        h_tpy, t_tpy = p[7], p[13]
                     else:
                         t_id, h_id = p[5], p[11]
                         t_start, h_start = p[8], p[14]
                         t_end, h_end = p[9], p[15]
+                        t_tpy, h_tpy = p[7], p[13]
                     h_start_word = list(map(int, h_start.split(':')))
                     h_end_word = list(map(int, h_end.split(':')))
                     t_start_word = list(map(int, t_start.split(':')))
@@ -277,6 +295,9 @@ def read_bio(file_in, tokenizer, rel2id, max_seq_length=1024):
                     h_id, t_id = ent2idx[h_id], ent2idx[t_id]
 
                     r = rel2id[p[0]]
+                    if valid_ents_pair is not None and (h_tpy, t_tpy) not in valid_ents_pair:
+                        # print('YW =======> invalid pair: ', h_tpy, t_tpy)
+                        continue
                     if (h_id, t_id) not in train_triples:
                         train_triples[(h_id, t_id)] = [{'relation': r}]
                     else:

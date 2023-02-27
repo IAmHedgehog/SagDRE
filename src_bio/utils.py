@@ -42,7 +42,7 @@ def collate_fn(batch):
             cur_sampled_labels.append(pos_rel)
             cur_sampled_hts.append(pos_ht)
 
-        neg_cnt = min(len(neg_hts), max(len(pos_hts) * neg_ratio, 4))
+        neg_cnt = min(len(neg_hts), max(len(pos_hts) * neg_ratio, 10))
         neg_rels = random.sample(list(zip(neg_relations, neg_hts)), neg_cnt)
         for neg_rel, neg_ht in neg_rels:
             cur_sampled_labels.append(neg_rel)

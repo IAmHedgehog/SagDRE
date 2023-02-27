@@ -25,7 +25,7 @@ def train(args, model, train_features, dev_features, test_features):
         best_test_score = 0
         for epoch in range(int(num_epoch)):
             model.zero_grad()
-            for batch in tqdm(train_dataloader, desc='Epoch '+str(epoch)):
+            for batch in tqdm(train_dataloader, desc='Epoch ' + str(epoch)):
                 model.train()
                 inputs = {
                     'input_ids': batch[0].cuda(), 'attention_mask': batch[1].cuda(),
@@ -58,7 +58,7 @@ def train(args, model, train_features, dev_features, test_features):
         {'params': model.model.parameters(), 'lr': 0.00005},
         {'params': base_params, 'weight_decay': 0.0005}
         # {'params': base_params}
-    ], lr=0.001)
+    ], lr=0.0001)
 
     set_seed(args)
     model.zero_grad()
