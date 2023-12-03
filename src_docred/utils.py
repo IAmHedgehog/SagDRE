@@ -361,6 +361,7 @@ class ATLoss(nn.Module):
         # Sum two parts
         # loss = loss1 + loss2 + loss3 + loss4
         # loss = loss3 + 0.5 * loss4
+        # can balance the negative and positive classes since there are far less positive classes
         loss = loss3 + loss4
         loss = torch.sum(loss * r_mask) / torch.sum(r_mask)
         # loss = loss.mean()
